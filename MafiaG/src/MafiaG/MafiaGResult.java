@@ -32,19 +32,19 @@ public class MafiaGResult extends JFrame {
         contentPane.setLayout(new BorderLayout(10, 10));
         setContentPane(contentPane);
 
-        // Áß¾Ó ÆĞ³Î: ÅØ½ºÆ® + ÀÌ¹ÌÁö
+        // ì¤‘ì•™ íŒ¨ë„: í…ìŠ¤íŠ¸ + ì´ë¯¸ì§€
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setOpaque(false); // ¹è°æ Åõ¸í
+        centerPanel.setOpaque(false); // ë°°ê²½ íˆ¬ëª…
 
-        // °á°ú ÅØ½ºÆ®
-        JLabel resultLabel = new JLabel(isWinner ? "½Â¸®" : "ÆĞ¹è", SwingConstants.CENTER);
+        // ê²°ê³¼ í…ìŠ¤íŠ¸
+        JLabel resultLabel = new JLabel(isWinner ? "ìŠ¹ë¦¬" : "íŒ¨ë°°", SwingConstants.CENTER);
         resultLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 50));
         resultLabel.setForeground(new Color(50, 130, 200));
         resultLabel.setAlignmentX(Component.CENTER_ALIGNMENT); 
-        resultLabel.setBorder(BorderFactory.createEmptyBorder(60, 0, 30, 0)); // ¿©¹é Á¶Á¤
+        resultLabel.setBorder(BorderFactory.createEmptyBorder(60, 0, 30, 0)); // ì—¬ë°± ì¡°ì •
 
-        // ÀÌ¹ÌÁö
+        // ì´ë¯¸ì§€
         String imagePath = isWinner ? "src/victory.png" : "src/defeat.png";
         ImageIcon icon = new ImageIcon(imagePath);
         Image img = icon.getImage().getScaledInstance(640, 384, Image.SCALE_SMOOTH); 
@@ -55,14 +55,14 @@ public class MafiaGResult extends JFrame {
         centerPanel.add(imageLabel);
         contentPane.add(centerPanel, BorderLayout.CENTER);
 
-        // ¹öÆ° ÆĞ³Î
+        // ë²„íŠ¼ íŒ¨ë„
         JPanel buttonPanel = new JPanel(new BorderLayout());
         buttonPanel.setOpaque(false);
 
         JButton quitButton = new JButton();
         JButton againButton = new JButton();
 
-        // ¾ÆÀÌÄÜ
+        // ì•„ì´ì½˜
         ImageIcon quitIcon = new ImageIcon("src/quit_button.png");
         ImageIcon playIcon = new ImageIcon("src/playagain_button.png");
 
@@ -94,7 +94,7 @@ public class MafiaGResult extends JFrame {
 
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Ã¢ ´İ±â ÀÌº¥Æ®
+        // ì°½ ë‹«ê¸° ì´ë²¤íŠ¸
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -107,11 +107,11 @@ public class MafiaGResult extends JFrame {
 
     private void logoutAndExit() {
         DatabaseManager.logoutUser(username);
-        JOptionPane.showMessageDialog(null, "·Î±×¾Æ¿ô µÇ¾ú½À´Ï´Ù!");
+        JOptionPane.showMessageDialog(null, "ë¡œê·¸ì•„ì›ƒ ë˜ì—ˆìŠµë‹ˆë‹¤!");
         System.exit(0);
     }
 
-    // ³»ºÎ Å¬·¡½º: ±×¶óµ¥ÀÌ¼Ç ¹è°æ ÆĞ³Î
+    // ë‚´ë¶€ í´ë˜ìŠ¤: ê·¸ë¼ë°ì´ì…˜ ë°°ê²½ íŒ¨ë„
     class GradientPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
@@ -126,4 +126,6 @@ public class MafiaGResult extends JFrame {
             g2d.fillRect(0, 0, width, height);
         }
     }
+    
+    
 }

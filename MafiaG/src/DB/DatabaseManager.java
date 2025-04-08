@@ -1,185 +1,209 @@
 package DB;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseManager {
-	/*
-	 * private static final String URL = "jdbc:mysql://localhost:3306/mafia_game";
-	 * private static final String USER = ""; // º»ÀÎ DB À¯Àú¸í private static final
-	 * String PASSWORD = ""; // º»ÀÎ DB ºñ¹Ğ¹øÈ£
-	 */    
-	
+
 	private static final String URL = "jdbc:mysql://localhost:3306/mafiag";
-	private static final String USER = "root"; // º»ÀÎ DB À¯Àú¸í private static final
+	private static final String USER = "root";
 	public static String PASSWORD = "0000";
-	
-    // ·Î±×ÀÎ
-	public static boolean checkLogin(String id, String password) {
-        String sql = "SELECT * FROM member WHERE member_id = ? AND password = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, id);
-            pstmt.setString(2, password);
 
-            ResultSet rs = pstmt.executeQuery();
-            return rs.next(); // °á°ú°¡ ÀÖÀ¸¸é ·Î±×ÀÎ ¼º°ø
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-	
-	// ¾ÆÀÌµğ Ã£±â
-	public static String findMemberIdByEmail(String email) {
-        String sql = "SELECT member_id FROM member WHERE email = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	// ë¡œê·¸ì¸
+	public static String checkLogin(String id, String password) {
+		String sql = "SELECT * FROM member WHERE member_id = ? AND password = ?";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, email);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("member_id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-	
-	// ºñ¹Ğ¹øÈ£ Ã£±â
-	public static boolean findPasswordByEmailAndId(String id, String email) {
-	    String sql = "SELECT * FROM member WHERE member_id = ? AND email = ?";
-	    try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, id);
+			pstmt.setString(2, password);
 
-	        pstmt.setString(1, id);
-	        pstmt.setString(2, email);
-	        ResultSet rs = pstmt.executeQuery();
-	        return rs.next(); // °á°ú°¡ ÀÖÀ¸¸é Á¤º¸ ÀÏÄ¡
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getString("nickname");
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
-	
-	// ID Áßº¹ È®ÀÎ
-    public static boolean isIdDuplicate(String id) {
-        String sql = "SELECT COUNT(*) FROM Member WHERE member_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
+	// ì•„ì´ë”” ì°¾ê¸°
+	public static String findMemberIdByEmail(String email) {
+		String sql = "SELECT member_id FROM member WHERE email = ?";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+			pstmt.setString(1, email);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getString("member_id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    // ´Ğ³×ÀÓ Áßº¹ È®ÀÎ
-    public static boolean isNicknameDuplicate(String nickname) {
-        String sql = "SELECT COUNT(*) FROM Member WHERE nickname = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	// ë¹„ë°€ë²ˆí˜¸ ì°¾ê¸°
+	public static boolean findPasswordByEmailAndId(String id, String email) {
+		String sql = "SELECT * FROM member WHERE member_id = ? AND email = ?";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, nickname);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
+			pstmt.setString(1, id);
+			pstmt.setString(2, email);
+			ResultSet rs = pstmt.executeQuery();
+			return rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	// ID ì¤‘ë³µ í™•ì¸
+	public static boolean isIdDuplicate(String id) {
+		String sql = "SELECT COUNT(*) FROM member WHERE member_id = ?";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-    // ÀÌ¸ŞÀÏ Áßº¹ È®ÀÎ
-    public static boolean isEmailDuplicate(String email) {
-        String sql = "SELECT COUNT(*) FROM Member WHERE email = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt(1) > 0;
+			}
 
-            pstmt.setString(1, email);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	// ë‹‰ë„¤ì„ ì¤‘ë³µ í™•ì¸
+	public static boolean isNicknameDuplicate(String nickname) {
+		String sql = "SELECT COUNT(*) FROM member WHERE nickname = ?";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-    // È¸¿ø °¡ÀÔ Ã³¸®
-    public static boolean insertNewMember(String id, String password, String nickname, String email) {
-        String sql = "INSERT INTO Member (member_id, password, email, nickname) VALUES (?, ?, ?, ?)";
+			pstmt.setString(1, nickname);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt(1) > 0;
+			}
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
-            pstmt.setString(1, id);
-            pstmt.setString(2, password);
-            pstmt.setString(3, email);
-            pstmt.setString(4, nickname);
+	// ì´ë©”ì¼ ì¤‘ë³µ í™•ì¸
+	public static boolean isEmailDuplicate(String email) {
+		String sql = "SELECT COUNT(*) FROM member WHERE email = ?";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            int rows = pstmt.executeUpdate();
-            return rows > 0;
+			pstmt.setString(1, email);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt(1) > 0;
+			}
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
-    // À¯ÀúÀÇ ÇöÀç Á¡¼ö °¡Á®¿À±â
-    public static int getUserScore(String username) {
-        int score = 0;
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(
-                "SELECT ´©ÀûÁ¡¼ö FROM users WHERE È¸¿ø¾ÆÀÌµğ = ?")) {
+	// íšŒì› ê°€ì… ì²˜ë¦¬
+	public static boolean insertNewMember(String id, String password, String nickname, String email) {
+		String sql = "INSERT INTO member (member_id, password, email, nickname) VALUES (?, ?, ?, ?)";
 
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                score = rs.getInt("´©ÀûÁ¡¼ö");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return score;
-    }
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-    // À¯ÀúÀÇ Á¡¼ö ¾÷µ¥ÀÌÆ® (°ÔÀÓ ÈÄ ¹İ¿µ)
-    public static void updateUserScore(String username, int scoreToAdd) {
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(
-                "UPDATE users SET ´©ÀûÁ¡¼ö = ´©ÀûÁ¡¼ö + ? WHERE È¸¿ø¾ÆÀÌµğ = ?")) {
+			pstmt.setString(1, id);
+			pstmt.setString(2, password);
+			pstmt.setString(3, email);
+			pstmt.setString(4, nickname);
 
-            pstmt.setInt(1, scoreToAdd);
-            pstmt.setString(2, username);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+			int rows = pstmt.executeUpdate();
+			return rows > 0;
 
-    // ·Î±×¾Æ¿ô (Á¾·á Àü Ã³¸®)
-    public static void logoutUser(String username) {
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(
-                "UPDATE users SET last_login = NOW() WHERE È¸¿ø¾ÆÀÌµğ = ?")) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
-            pstmt.setString(1, username);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	// ìœ ì €ì˜ í˜„ì¬ ì ìˆ˜ ê°€ì ¸ì˜¤ê¸°
+	public static int getUserScore(String username) {
+		int score = 0;
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(
+					 "SELECT score FROM member WHERE member_id = ?")) {
+
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				score = rs.getInt("score");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return score;
+	}
+
+	// ìœ ì €ì˜ ì ìˆ˜ ì—…ë°ì´íŠ¸
+	public static void updateUserScore(String username, int scoreToAdd) {
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(
+					 "UPDATE member SET score = score + ? WHERE member_id = ?")) {
+
+			pstmt.setInt(1, scoreToAdd);
+			pstmt.setString(2, username);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// ë¡œê·¸ì•„ì›ƒ ì²˜ë¦¬
+	public static void logoutUser(String username) {
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(
+					 "UPDATE member SET last_login = NOW() WHERE member_id = ?")) {
+
+			pstmt.setString(1, username);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// ë­í‚¹ ìƒìœ„ ìœ ì € nëª… ê°€ì ¸ì˜¤ê¸°
+	public static List<UserScore> getTopRankers(int limit) {
+		List<UserScore> rankers = new ArrayList<>();
+		String sql = "SELECT nickname, score FROM member ORDER BY score DESC LIMIT ?";
+
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setInt(1, limit);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				String name = rs.getString("nickname");
+				int score = rs.getInt("score");
+				rankers.add(new UserScore(name, score));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return rankers;
+	}
 }
