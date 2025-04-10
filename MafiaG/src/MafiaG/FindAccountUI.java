@@ -6,9 +6,7 @@ import DB.DatabaseManager;
 
 public class FindAccountUI extends JFrame {
     public FindAccountUI(Runnable backToLogin) {
-        setTitle("MafiaG");
-        ImageIcon icon = new ImageIcon("src/img/logo.png"); // 로고 경로
-        setIconImage(icon.getImage());
+        setTitle("아이디/비밀번호 찾기");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
