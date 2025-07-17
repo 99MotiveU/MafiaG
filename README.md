@@ -49,10 +49,12 @@ Google의 **Gemini API**를 활용한 AI가 인간 사이에 섞여 플레이하
 | 틀린 유저 | -2점 |
 | Gemini가 승리한 경우 | 모든 유저 -2점 |
 
+## **랭킹시스템 explain**
+
 ## ⚙️ 설치 및 실행 방법
 
 ### ✅ 환경 조건
-- Java 17+
+- Java 8+
 - MySQL 서버 실행 중
 - STS 또는 Eclipse 사용 권장
 
