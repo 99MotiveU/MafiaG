@@ -12,7 +12,6 @@ Google의 **Gemini API**를 활용한 AI가 인간 사이에 섞여 플레이하
 - **기술 스택:**  
   - `Java (Back-end & GUI)`
   - `MySQL (DB)`
-  - `Socket 통신`
   - `Gemini API`
 - **개발 도구:**  
   - Spring Tool Suite(STS), DBeaver  
